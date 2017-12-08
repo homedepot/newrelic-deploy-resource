@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 set -e
 exec 3>&1
@@ -11,17 +11,17 @@ inputs=$(mktemp /tmp/resource-in.XXXXXX)
 
 cat > $payload <&0
 
-app_id=$(jq -r '.params.app_id' < $inputs)
+app_id=$(jq -r '.source.app_id' < $inputs)
 
-api_key=$(jq -r '.params.api_key' < $inputs)
+api_key=$(jq -r '.source.api_key' < $inputs)
 
-revision=$(jq -r '.params.revision' < $inputs)
+revision=$(jq -r '(.params.revision // null)' < $inputs)
 
-changelog=$(jq -r '.params.changelog' < $inputs)
+changelog=$(jq -r '(.params.changelog // null)' < $inputs)
 
-description=$(jq -r '.params.description' < $inputs)
+description=$(jq -r '(.params.description // null)' < $inputs)
 
-user=$(jq -r '.params.user' < $inputs)
+user=$(jq -r '(.params.user // null' < $inputs)
 
 curl -X POST 'https://api.newrelic.com/v2/applications/${app_id}/deployments.json' \
      -H 'X-Api-Key:${api_key}' -i \
