@@ -21,7 +21,7 @@ changelog=$(jq -r '(.params.changelog // null)' < $inputs)
 
 description=$(jq -r '(.params.description // null)' < $inputs)
 
-user=$(jq -r '(.params.user // null' < $inputs)
+user=$(jq -r '(.params.user // null)' < $inputs)
 
 curl -X POST 'https://api.newrelic.com/v2/applications/${app_id}/deployments.json' \
      -H 'X-Api-Key:${api_key}' -i \
