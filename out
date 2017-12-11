@@ -9,7 +9,7 @@ PATH=/usr/local/bin:$PATH
 
 inputs=$(mktemp /tmp/resource-in.XXXXXX)
 
-cat > $payload <&0
+cat > $inputs <&0
 
 app_id=$(jq -r '.source.app_id' < $inputs)
 
