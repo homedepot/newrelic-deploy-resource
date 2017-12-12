@@ -11,9 +11,9 @@ inputs=$(mktemp /tmp/resource-in.XXXXXX)
 
 cat > $inputs <&0
 
-app_id=$(jq -r '.source.app_id' < $inputs)
+app_id=$(jq -c '.source.app_id' < $inputs)
 
-api_key=$(jq -r '.source.api_key' < $inputs)
+api_key=$(jq -c '.source.api_key' < $inputs)
 
 revision=$(jq -r '(.params.revision // null)' < $inputs)
 
