@@ -42,3 +42,21 @@ curl -X POST "https://api.newrelic.com/v2/applications/${app_id}/deployments.jso
      -H "X-Api-Key:${api_key}" -i \
      -H "Content-Type: application/json" \
      -d ${body}
+
+jq -n \
+    --arg ts $(date +%s) \
+    --arg revision "${revision}" \
+    --arg changelog "${changelog}" \
+    --arg description "${description}" \
+    --arg user "${user}" \
+    '{
+        version: {
+            timestamp: $ts
+        },
+        metadata: [
+            {name: "revision", value: $revision},
+            {name: "changelog", value: $changelog},
+            {name: "description", value: $description},
+            {name: "user", value: $user}
+        ]
+    }' >&3
