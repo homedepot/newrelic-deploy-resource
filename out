@@ -11,27 +11,34 @@ inputs=$(mktemp /tmp/resource-in.XXXXXX)
 
 cat > $inputs <&0
 
-app_id=$(jq -c '.source.app_id' < $inputs)
+app_id=$(jq -r '.source.app_id' < $inputs)
 
-api_key=$(jq -c '.source.api_key' < $inputs)
+api_key=$(jq -r '.source.api_key' < $inputs)
 
-revision=$(jq -r '(.params.revision // null)' < $inputs)
+revision=$(jq -r '(.params.revision // empty)' < $inputs)
 
-changelog=$(jq -r '(.params.changelog // null)' < $inputs)
+changelog=$(jq -r '(.params.changelog // empty)' < $inputs)
 
-description=$(jq -r '(.params.description // null)' < $inputs)
+description=$(jq -r '(.params.description // empty)' < $inputs)
 
-user=$(jq -r '(.params.user // null)' < $inputs)
+user=$(jq -r '(.params.user // empty)' < $inputs)
 
-curl -X POST 'https://api.newrelic.com/v2/applications/${app_id}/deployments.json' \
-     -H 'X-Api-Key:${api_key}' -i \
-     -H 'Content-Type: application/json' \
-     -d \
-'{
-  "deployment": {
-    "revision": "${revision}",
-    "changelog": "${changelog}",
-    "description": "${description}",
-    "user": "${user}"
-  }
-}'
+body=$(jq -c -n \
+	--arg revision "${revision}" \
+	--arg changelog "${changelog}" \
+	--arg description "${description}" \
+	--arg user "${user}" \
+	'{
+		deployment: {
+			revision: $revision,
+			changelog: $changelog,
+			description: $description,
+			user: $user
+		}
+	}'
+)
+
+curl -X POST "https://api.newrelic.com/v2/applications/${app_id}/deployments.json" \
+     -H "X-Api-Key:${api_key}" -i \
+     -H "Content-Type: application/json" \
+     -d ${body}
