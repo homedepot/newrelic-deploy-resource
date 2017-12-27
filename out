@@ -17,12 +17,6 @@ api_key=$(jq -r '.source.api_key' < $inputs)
 
 json_file=$(jq -r '.params.json_file // ""' < $inputs)
 
-#revision=$(jq -r '(.params.revision // empty)' < $inputs)
-
-#changelog=$(jq -r '(.params.changelog // empty)' < $inputs)
-
-#description=$(jq -r '(.params.description // empty)' < $inputs)
-
 user=$(jq -r '(.params.user // empty)' < $inputs)
 
 
@@ -55,10 +49,20 @@ body=$(jq -c -n \
 	}'
 )
 
-curl -X POST "https://api.newrelic.com/v2/applications/${app_id}/deployments.json" \
+RESPONSE=$(curl -X POST "https://api.newrelic.com/v2/applications/${app_id}/deployments.json" \
      -H "X-Api-Key:${api_key}" -i \
      -H "Content-Type: application/json" \
-     -d ${body}
+     -d ${body})
+
+
+
+STATUS=$(echo $RESPONSE | grep HTTP |  awk '{print $2}')
+
+if [ "$STATUS" -ne "200" ] || [ "$STATUS" -ne "201" ]; then
+  echo $RESPONSE
+  exit 1;
+fi
+
 
 jq -n \
     --arg ts $(date +%s) \
