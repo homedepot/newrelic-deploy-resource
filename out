@@ -15,13 +15,30 @@ app_id=$(jq -r '.source.app_id' < $inputs)
 
 api_key=$(jq -r '.source.api_key' < $inputs)
 
-revision=$(jq -r '(.params.revision // empty)' < $inputs)
+json_file=$(jq -r '.params.json_file // ""' < $inputs)
 
-changelog=$(jq -r '(.params.changelog // empty)' < $inputs)
+#revision=$(jq -r '(.params.revision // empty)' < $inputs)
 
-description=$(jq -r '(.params.description // empty)' < $inputs)
+#changelog=$(jq -r '(.params.changelog // empty)' < $inputs)
+
+#description=$(jq -r '(.params.description // empty)' < $inputs)
 
 user=$(jq -r '(.params.user // empty)' < $inputs)
+
+
+if [[ -n "${json_file}" && -f "${json_file}" ]]
+then
+  check=$(jq '.revision?' $json_file)
+  if [[ $check == null ]]
+  then
+    echo "revision is missing from the json_file. cannot continue"
+    exit 1
+  fi
+
+  revision=$(jq -r '.revision' $json_file)
+  changelog=$(jq -r '(.changelog // empty)' $json_file)
+  description=$(jq -r '(.description // empty)' $json_file)
+fi
 
 body=$(jq -c -n \
 	--arg revision "${revision}" \
