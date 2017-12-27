@@ -19,7 +19,7 @@ Source Configuration
 --------------------
 
 -	`api_key`: *Required.* The API key provided by New Relic.
--   `app_id`: *Required.* The ID of your app provided by New Relic. This can be usually found in the URL of your app's main monitoring page.
+- `app_id`: *Required.* The ID of your app provided by New Relic. This can be usually found in the URL of your app's main monitoring page.
 
 ```yaml
 - name: new-relic
@@ -38,10 +38,16 @@ Marks a deploy in New Relic, with the configured parameters.
 
 #### Parameters
 
--	`revision`: *Required.* A version number or git sha to use as a marker.
--	`description`: *Optional.* A short description of the change.
--   `changelog`: *Optional.* A log of changes or a link to the changelog.
--	`user`: *Optional.* The user marking the deploy.
+-	`json_file`: *Required.* A file with the following template:
+```json
+{
+  "revision":"v1.0", #required
+  "changelog":"logs go here", #optional
+  "description":"a short description" #optional
+}
+```
+- `user`: *Optional.* The user who is marking the deployment
+
 
 ```yaml
 ---
@@ -51,10 +57,10 @@ jobs:
   plan:
   - put: new-relic
     params:
-      revision: v1.0.0
-      description: "release of that new, really cool feature"
-      changelog: "https://github.com/user/app/releases"
+      json_file: /tmp/build/put/path/to/file.json
       user: yoursTruly
 ```
+
+*Please note that the path to your json file must be prepended with `/tmp/build/put/`
 
 See the [official documentation](http://concourse.ci/implementing-resources.html#resource-metadata) for a complete list of available metadata.
