@@ -20,11 +20,8 @@ json_file=$(jq -r '.params.json_file // ""' < $inputs)
 user=$(jq -r '(.params.user // empty)' < $inputs)
 
 
-if [[ -n "${json_file}" && -f "${json_file}" ]]
-then
-  check=$(jq '.revision?' $json_file)
-  if [[ $check == null ]]
-  then
+if [ -n "${json_file}" ] && [ -f "${json_file}" ]; then
+  if [ "$(jq 'has("revision")' $json_file)" = "false" ]; then
     echo "revision is missing from the json_file. cannot continue"
     exit 1
   fi
