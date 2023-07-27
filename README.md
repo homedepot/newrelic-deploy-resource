@@ -63,4 +63,4 @@ jobs:
 
 *Please note that the path to your json file must be prepended with `/tmp/build/put/`
 
-See the [official documentation](http://concourse.ci/implementing-resources.html#resource-metadata) for a complete list of available metadata.
+See the [official documentation](https://concourse-ci.org/implementing-resource-types.html#resource-metadata) for a complete list of available metadata.
