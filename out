@@ -50,7 +50,7 @@ RESPONSE=$(curl -X POST "https://api.newrelic.com/v2/applications/${app_id}/depl
 
 
 
-STATUS=$(echo "$RESPONSE" | grep HTTP |  awk '{print $2}')
+STATUS=$(echo "$RESPONSE" | awk '/HTTP/ { print $2 }')
 
 if [ "$STATUS" -ne "200" ] && [ "$STATUS" -ne "201" ]; then
   echo "$RESPONSE"
