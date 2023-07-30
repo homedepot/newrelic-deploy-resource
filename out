@@ -4,9 +4,6 @@ set -e
 exec 3>&1
 exec 1>&2
 
-# for jq
-PATH=/usr/local/bin:$PATH
-
 inputs=$(mktemp /tmp/resource-in.XXXXXX)
 
 cat > "$inputs" <&0
