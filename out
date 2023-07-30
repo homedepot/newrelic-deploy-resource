@@ -62,7 +62,7 @@ fi
 
 
 jq -n \
-    --arg ts $(date +%s) \
+    --arg ts "$(date +%s)" \
     --arg revision "${revision}" \
     --arg changelog "${changelog}" \
     --arg description "${description}" \
